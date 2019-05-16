@@ -1,0 +1,80 @@
+
+
+
+
+
+
+
+
+
+Router0¡¢1¡¢2Ìí¼Ó4A/S
+R0£ºen config t   
+       int s1/0  ip address 172.17.1.2 255.255.255.0 no shutdown clock rate 64000
+       int s1/1  ip address 172.16.1.1 255.255.255.0 no shutdown clock rate 64000
+       int f0/0  ip address 192.168.2.0 255.255.255.0 no shutdown 
+R1£ºen config t
+       int s1/0  ip address 172.17.1.1 255.255.255.0 no shutdown 
+       int s1/2  ip address 172.18.1.1 255.255.255.0 no shutdown 
+       int f0/0  ip address 192.168.3.254 255.255.255.0 no shutdown
+R2£ºen config t
+       int s1/1  ip address 172.16.1.2 255.255.255.0 no shutdown clock rate 64000
+       int s1/2  ip address 172.18.1.2 255.255.255.0 no shutdown clock rate 64000
+       int f0/0  ip address 192.168.1.254 255.255.255.0 no shutdown
+
+PC0£º192.168.3.1   255.255.255.0   192.168.3.254
+PC1£º192.168.3.2   255.255.255.0   192.168.3.254
+PC2£º192.168.2.1   255.255.255.0   192.168.2.254
+PC3£º192.168.2.2   255.255.255.0   192.168.2.254
+Ser0£º192.168.1.1  255.255.255.0   192.168.1.254
+Ser1£º192.168.1.2  255.255.255.0   192.168.1.254
+
+Ser0£ºÅäÖÃ->DNS  Name:www.gdlgxy.com A-Record 192.168.1.2
+Ser1£ºÅäÖÃ->Http
+
+
+R0£ºen config t
+       hostname HuangChuang 
+       router eigrp 100       
+       network 172.17.1.0
+       network 172.16.1.0
+       network 192.168.2.0
+
+R1£ºen config t
+       hostname Luoshan 
+       router eigrp 100       
+       network 172.17.1.0
+       network 172.18.1.0
+       network 192.168.3.0
+
+R2£ºen config t
+       hostname Xixian
+       router eigrp 100       
+       network 172.16.1.0
+       network 172.18.1.0
+       network 192.168.1.0
+
+R0£º(config) enable secret 123456     line vty 0 4  (config-line) login     password ok123
+        (config) access-list 1 permit host 192.168.2.2  line vty 0 4  (config-line) access-class 1 in
+        //(config) access-list 1 permit 192.168.3.0 0.0.0.255
+
+R2£º(config) access-list 101 deny icmp 192.168.3.0 0.0.0.255 192.168.1.0 0.0.0.255
+       (config) access-list 101 permit ip any any
+       (config) int f0/0
+       (config-if) ip access-group 101 out
+
+R0£º(config) ip access-list extended ACL1
+       (config-ext-nacl) deny  tcp host 192.168.2.2 192.168.1.0 0.0.0.255 eq 80
+       (config-ext-nacl) deny udp host 192.168.2.3 192.168.1.0 0.0.0.255 eq 53
+       (config-ext-nacl) permit ip any any
+       (config) int f0/0
+       (config-if) ip access-group ACL1 in
+
+
+
+
+
+
+
+
+
+

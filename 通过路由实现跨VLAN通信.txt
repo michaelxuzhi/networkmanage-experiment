@@ -1,0 +1,23 @@
+实验设备： 1个Router  1个Switch 4台PC
+
+SW：
+①en   config t
+②vlan 20 vlan 21
+③int range f0/10-11  switchport access vlan 20
+④int range f0/15-16  switchport access vlan 21
+⑤补充的：config t  int f0/24  switchport mode trunk  
+
+R1：
+①en   config t
+②int f0/0    no shutdown
+③【封装协议】int f0/0.20 enca(table) dot1Q 20    ip address 192.168.0.254 255.255.255.0    no shutdown
+④【封装协议】int f0/0.21 enca(table) dot1Q 21    ip address 192.168.1.254 255.255.255.0    no shutdown
+
+PC1、PC2 同vlan
+ip地址：192.168.0.1  255.255.255.0 网关192.168.0.254 
+             192.168.0.2  255.255.255.0 网关192.168.0.254
+PC3、PC4 同vlan
+ip地址：192.168.1.1 255.255.255.0  网关192.168.1.254
+             192.168.1.2 255.255.255.0  网关192.168.1.254
+
+用PC1 ping PC2、PC3 若可以通信则说明路由配置完成，可以跨vlan通信

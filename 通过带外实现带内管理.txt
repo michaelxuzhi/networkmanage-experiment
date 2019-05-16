@@ -1,0 +1,14 @@
+设备： 1个Router    1个二层Switch    1个PC
+
+R1：
+①en  config t
+②hostname RA
+③在config下：enable password 123abc 设置普通模式登录特权模式密码
+④en  config t
+⑤int f0/0  ip address 192.168.1.100 255.255.255.0  no shutdown  exit
+⑥line vty 0 4       login       password star 先login会提示等待密码设置，再通过后面的命令设置密码
+
+PC1：
+①ip地址：192.168.1.10 255.255.255.0 不用设置网关
+②PC>telnet 192.168.1.100 进行带内管理，依次输入star密码，123abc进入特权模式密码
+③特权模式下：copy running-config startup-config 保存设置
